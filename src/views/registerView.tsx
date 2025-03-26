@@ -14,7 +14,7 @@ export default function RegisterView() {
 
   const { register, watch, handleSubmit, formState: { errors } } = useForm({defaultValues : initialValues})
 
-  console.log(errors)
+  const password = watch('password')
 
   const handleRegister = () => {
     console.log('desde handleRegister')
@@ -49,7 +49,11 @@ export default function RegisterView() {
             placeholder="Email de Registro"
             className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
             {...register('email', {
-              required: "El email es obligatorio"
+              required: "El email es obligatorio",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "E-mail no válido",
+            },
             })}
         />
         {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
@@ -75,7 +79,11 @@ export default function RegisterView() {
             placeholder="Password de Registro"
             className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
             {...register('password', {
-              required: "El password es obligatorio"
+              required: "El password es obligatorio",
+              minLength: {
+                value: 8,
+                message: "El password debe de der minimo 8 caracteres"
+              },
             })}
         />
           {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
@@ -89,7 +97,8 @@ export default function RegisterView() {
             placeholder="Repetir Password"
             className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
             {...register('password_confirmation', {
-              required: "Repetir el password es obligatorio"
+              required: "Repetir el password es obligatorio",
+              validate: (value) => value === password || 'Los passwords no son iguales'
             })}
         />
 
